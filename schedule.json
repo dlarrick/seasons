@@ -1,0 +1,86 @@
+{
+    'thermostats': {
+	'climate.master_br': [
+	    {
+		'comment': 'On while sleeping, off otherwise',
+		'system_modes': ['Normal Summer'],
+		'climate_mode': 'Cool',
+		'windows': ['sensor.bedroom_window'],
+		'schedule': [
+		    {
+			'time': '20:00',
+			'mode': 'Sleep'
+		    },
+		    {
+			'time': '09:00',
+			'mode': 'Off'
+		    },
+		],
+		'setpoints': {
+		    'Sleep': 72
+		}
+	    },
+	    {
+		'comment': 'On while sleeping, maintenance temperature otherwise',
+		'system_modes': ['Hot Summer'],
+		'climate_mode': 'Cool',
+		'windows': ['sensor.bedroom_window'],
+		'schedule': [
+		    {
+			'time': '20:00',
+			'mode': 'Sleep'
+		    },
+		    {
+			'time': '09:00',
+			'mode': 'Maintenance'
+		    },
+		],
+		'setpoints': {
+		    'Sleep': 72,
+		    'Maintenance': 78
+		}
+	    },
+	    {
+		'comment': 'Cool sleeping temperature, changing at different times on different days of week, Occupancy (alarm disarmed) overrides Away to Home.'
+		'system_modes': ['Warm Shoulder', 'Cold Shoulder'],
+		'climate_mode': 'Heat',
+		'schedule': [
+		    {
+			'time': '22:00',
+			'mode': 'Sleep'
+		    },
+		    {
+			'time': '06:00',
+			'days': '-MTWTF-',
+			'mode': 'Morning'
+		    },
+		    {
+			'time': '07:30',
+			'days': 'S-----S',
+			'mode': 'Morning'
+		    },
+		    {
+			'time': '09:00',
+			'mode': 'Away',
+			'occupancy_override': { 'disarmed': 'Home' }
+		    },
+		],
+		'occupancy_entity': 'alarm_control_panel.27_fuller_ter',
+		'setpoints': {
+		    'Sleep': 62,
+		    'Morning': 67,
+		    'Away': 62,
+		    'Home': 68
+		}
+	    }
+	],
+	'climate.second_floor': [
+	    {
+		'comment': 'Ecobee using its own internal schedule'
+		'system_modes': ['Winter'],
+		'climate_mode': 'Heat'
+	    }
+	]
+    },
+    
+}

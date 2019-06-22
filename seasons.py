@@ -42,11 +42,53 @@ seasons = {
     ('Normal Summer', 'climate.master_br'): [
         {
             'title': 'Sleeping',
-            'time_on': '21:30',
+            'time_on': '20:30',
             'time_off': '09:00',
             'operation': 'cool',
             'window': 'binary_sensor.bedroom_window',
             'setpoint': 73
+        },
+    ],
+    ('Normal Summer', 'climate.first_floor'): [
+        {
+            'title': 'Off',
+            'operation': 'off',
+        },
+    ],
+    ('Normal Summer', 'climate.loft'): [
+        {
+            'title': 'Off',
+            'operation': 'off',
+        },
+    ],
+    ('Humid Summer', 'climate.master_br'): [
+        {
+            'title': 'Dehumidify',
+            'time_on': '19:30',
+            'time_off': '21:00',
+            'operation': 'dry',
+            'window': 'binary_sensor.bedroom_window',
+            'setpoint': 73
+        },
+        {
+            'title': 'Sleeping',
+            'time_on': '21:00',
+            'time_off': '09:00',
+            'operation': 'cool',
+            'window': 'binary_sensor.bedroom_window',
+            'setpoint': 73
+        },
+    ],
+    ('Humid Summer', 'climate.first_floor'): [
+        {
+            'title': 'Off',
+            'operation': 'off',
+        },
+    ],
+    ('Humid Summer', 'climate.loft'): [
+        {
+            'title': 'Off',
+            'operation': 'off',
         },
     ],
     ('Hot Summer', 'climate.master_br'): [
@@ -178,11 +220,13 @@ else:
     for schedule in schedules:
         time_on_str = schedule.get('time_on')
         time_off_str = schedule.get('time_off')
+        time_on = None
+        time_off = None
         if time_on_str:
             time_on = datetime.datetime.strptime(time_on_str, '%H:%M').time()
         if time_off_str:
             time_off = datetime.datetime.strptime(time_off_str, '%H:%M').time()
-        in_interval = ((not time_on_str and not time_off_str) or
+        in_interval = ((not time_on) or (not time_off) or
                        is_time_between(time_on, time_off, now))
         home_away_match = True
         if schedule.get('if_home'):
@@ -191,7 +235,8 @@ else:
             home_away_match = not is_home
 
         if in_interval and home_away_match:
-            # We will obey this schedule and ignore subsequent matches
+            if not time_on:
+                time_on = datetime.datetime.strptime('00:00', '%H:%M').time()
             first_interval_start = time_on
             first_interval_end = time_offset(time_on, interval)
             in_first_interval = is_time_between(first_interval_start, first_interval_end, now)
@@ -202,47 +247,57 @@ else:
                 window_open = False
 
             # When we get here, we have schedules for this unit and
-            # global mode and we're in this schedule's interval
+            # global mode and we're in this schedule's interval.
+            # We will obey this schedule and ignore subsequent matches
             decided = False
             matched = True
+
             if window_open:
                 # Off if window is open
                 turn_off = True
                 title = schedule.get('title') + ' (Window open)'
                 decided = True
             if not decided and from_timer and in_first_interval:
-                turn_on = True
                 desired_operation = schedule.get('operation')
+                if desired_operation == 'off':
+                    turn_off = True
+                else:
+                    turn_on = True
                 setpoint = schedule.get('setpoint')
                 title = schedule.get('title')
                 decided = True
             if not decided and not from_timer:
-                turn_on = True
                 desired_operation = schedule.get('operation')
+                if desired_operation == 'off':
+                    turn_off = True
+                else:
+                    turn_on = True
                 setpoint = schedule.get('setpoint')
                 title = schedule.get('title')
                 decided = True
             break
         
-if not matched:
-    # If no schedules matched, turn off
-    turn_off = True
-    title = 'Default (Off)'
+    if not matched:
+        # If no schedules matched, turn off
+        # FIXME: only do this just past the most recent schedule period
+        turn_off = True
+        title = 'Default (Off)'
 
-if turn_off:
-    desired_operation = 'off'
+    if turn_off:
+        desired_operation = 'off'
 
-logger.info("Setting {} to mode {} target {} from schedule {}".format(
-    climate_unit, desired_operation, setpoint, title))
+    logger.info("Setting {} to mode {} target {} from schedule {}".format(
+        climate_unit, desired_operation, setpoint, title))
 
-if setpoint:
-    service_data = {
-        "entity_id": climate_unit,
-        "temperature": setpoint,
-        "operation_mode": desired_operation}
-    hass.services.call('climate', 'set_temperature', service_data, False)
+    if setpoint and desired_operation:
+        service_data = {
+            "entity_id": climate_unit,
+            "temperature": setpoint,
+            "operation_mode": desired_operation}
+        hass.services.call('climate', 'set_temperature', service_data, False)
 
-service_data = {
-    "entity_id": climate_unit,
-    "operation_mode": desired_operation}
-hass.services.call('climate', 'set_operation_mode', service_data, False)
+    if desired_operation:
+        service_data = {
+            "entity_id": climate_unit,
+            "operation_mode": desired_operation}
+        hass.services.call('climate', 'set_operation_mode', service_data, False)

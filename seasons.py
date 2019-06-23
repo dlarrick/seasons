@@ -212,7 +212,6 @@ if at_home_sensor:
     is_home = hass.states.get(at_home_sensor).state
     is_away = not is_home
 
-current_operation = hass.states.get(climate_unit).state
 now = datetime.datetime.now().time()
 today = datetime.datetime.now().weekday()
 
@@ -240,7 +239,7 @@ else:
         if time_off_str:
             time_off = datetime.datetime.strptime(time_off_str, '%H:%M').time()
 
-        day_match = true
+        day_match = True
         days = schedule.get('days')
         if days and len(days) is 7:
             day_match = days[today] != '-' and days[today] != '.'

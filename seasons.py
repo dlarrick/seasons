@@ -3,14 +3,17 @@
 # schedule.
 #
 # INPUTS:
-# * climate_unit: The Climate entity to be controlled
-# * global_mode: an entity whose state is the desired global climate mode
-#   (usually an input_select)
-# * at_home_sensor: an entity that represents whether anyone is home (usually
-#   a binary_sensor)
-# * from_timer: whether the script was triggered by timer. If true, only changes
-#   to the new mode / setpoint within the first 15 minutes of each schedule, so
-#   that manual overrides stick until the next schedule.
+# * climate_unit (required): The Climate entity to be controlled
+# * global_mode (required): an entity whose state is the desired global climate
+#   mode (usually an input_select)
+# * state_entity (required): an input_text entity, unique to this climate_unit,
+#   where the script can store some information between runs.
+# * at_home_sensor (optional): an entity that represents whether anyone is home
+#   (usually a binary_sensor)
+# * from_timer (optional): whether the script was triggered by timer. If true,
+#   only changes that modify the last-set operation mode or setpoint take
+#   effect. This is done so that manual changes are left alone until the next
+#   schedule switch.
 #
 # The last input is the 'seasons' dictionary as defined below, which defines the
 # scheduled behavior for each global mode / climate unit combination. It's a
@@ -24,8 +27,8 @@
 #   Seven characters, dash or dot if not active, any other character if active.
 #   You can use 0123456 or MTWTFSS or whatever you like. Monday is first,
 #   following Python datetime convention.
-# * operation: The operating mode for this schedule, one of the modes supported
-#   by your climate entity.
+# * operation (required): The operating mode for this schedule, one of the modes
+#   supported by your climate entity.
 # * setpoint (optional): The desired temperature for this schedule. Some modes
 #   (e.g. 'dry' dehumidifaction) don't require a setpoint so it's optional
 # * window (optional): If given, if this entity's state is 'on' (i.e. the given
@@ -46,8 +49,7 @@
 # * your window sensor(s) change(s) (relevant climate units)
 # * on a time_interval, suggested every 15 minutes. (all climate units). This
 #   interval is the resolution of your scheduled changes, so make it more or
-#   less frequent as required; you may need to change the 'interval' variable
-#   below as well.
+#   less frequent as required.
 
 seasons = {
     ('Normal Summer', 'climate.master_br'): [
@@ -200,8 +202,7 @@ def time_offset(orig_time, offset):
         hour = hour - 24
     return datetime.time(hour=hour, minute=minute)
 
-interval = 15
-
+saved_state = hass.states.get(data.get('state_entity')).state
 climate_unit = data.get('climate_unit', 'climate.master_br')
 current_mode = hass.states.get(data.get('global_mode')).state
 from_timer = data.get('from_timer', False)
@@ -228,7 +229,6 @@ else:
     desired_operation = None
     setpoint = None
     title = None
-    most_recent_end = None
     for schedule in schedules:
         time_on_str = schedule.get('time_on')
         time_off_str = schedule.get('time_off')
@@ -253,36 +253,29 @@ else:
         if schedule.get('if_away'):
             home_away_match = not is_home
 
-        if home_away_match and day_match and (not in_interval) and time_off:
-            if not most_recent_end or is_time_between(
-                    most_recent_end, now, time_off):
-                most_recent_end = time_off
-
         if in_interval and home_away_match:
             # When we get here, we have schedules for this unit and
             # global mode and we're in this schedule's interval.
             # We will obey this schedule and ignore subsequent matches
             if not time_on:
                 time_on = datetime.datetime.strptime('00:00', '%H:%M').time()
-            first_interval_start = time_on
-            first_interval_end = time_offset(time_on, interval)
-            in_first_interval = is_time_between(first_interval_start,
-                                                first_interval_end, now)
             window_open = False
             if schedule.get('window'):
-                window_open = hass.states.get(schedule['window']).state is 'on'
+                window_open = hass.states.get(schedule['window']).state == 'on'
             else:
                 window_open = False
 
             decided = False
             matched = True
-
+            next_state = "%s-%s" % (str(schedule.get('operation')),
+                                    str(schedule.get('setpoint')))
+            same_next_state = (next_state == saved_state)
             if window_open:
                 # Off if window is open
                 turn_off = True
                 title = schedule.get('title') + ' (Window open)'
                 decided = True
-            if not decided and from_timer and in_first_interval:
+            if (not decided) and from_timer and (not same_next_state):
                 desired_operation = schedule.get('operation')
                 if desired_operation == 'off':
                     turn_off = True
@@ -291,7 +284,7 @@ else:
                 setpoint = schedule.get('setpoint')
                 title = schedule.get('title')
                 decided = True
-            if not decided and not from_timer:
+            if not decided and (not from_timer):
                 desired_operation = schedule.get('operation')
                 if desired_operation == 'off':
                     turn_off = True
@@ -304,17 +297,17 @@ else:
 
     if not matched:
         # If no schedules matched, turn off
-        just_past_interval = False
-        if most_recent_end:
-            just_past_end = time_offset(most_recent_end, interval)
-            just_past_interval = is_time_between(
-                most_recent_end, just_past_end, now)
-        if (not from_timer) or just_past_interval:
+        next_state = "off-None"
+        same_next_state = (next_state == saved_state)
+        if (not from_timer) or (not same_next_state):
             turn_off = True
             title = 'Default (Off)'
 
     if turn_off:
         desired_operation = 'off'
+
+    if next_state:
+        hass.states.set(data.get('state_entity'), next_state)
 
     if desired_operation:
         logger.info("Setting {} to mode {} target {} from schedule {}".format(

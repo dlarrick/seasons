@@ -210,7 +210,7 @@ at_home_sensor = data.get('at_home_sensor')
 is_home = False
 is_away = False
 if at_home_sensor:
-    is_home = hass.states.get(at_home_sensor).state
+    is_home = hass.states.get(at_home_sensor).state == 'on'
     is_away = not is_home
 
 now = datetime.datetime.now().time()

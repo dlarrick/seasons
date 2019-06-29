@@ -317,9 +317,13 @@ else:
             "operation_mode": desired_operation}
         hass.services.call('climate', 'set_operation_mode', service_data, False)
 
-    if setpoint and desired_operation:
-        service_data = {
-            "entity_id": climate_unit,
-            "temperature": setpoint,
-            "operation_mode": desired_operation}
-        hass.services.call('climate', 'set_temperature', service_data, False)
+        if setpoint:
+            if '.' in str(setpoint):
+                setpoint_num = float(setpoint)
+            else:
+                setpoint_num = int(setpoint)
+            service_data = {
+                "entity_id": climate_unit,
+                "temperature": setpoint_num,
+                "operation_mode": desired_operation}
+            hass.services.call('climate', 'set_temperature', service_data, False)

@@ -401,14 +401,13 @@ schedules = SEASONS.get(key)
 
 matched = False
 setpoint = None
+turn_on = False
+turn_off = False
+desired_operation = None
+title = None
 if not schedules:
     logger.info("No schedules for {}".format(key))
 else:
-    turn_on = False
-    turn_off = False
-    desired_operation = None
-    setpoint = None
-    title = None
     for schedule in schedules:
         time_on_str = schedule.get('time_on')
         time_off_str = schedule.get('time_off')

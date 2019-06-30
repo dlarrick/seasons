@@ -372,17 +372,16 @@ def time_offset(orig_time, offset):
         hour = hour - 24
     return datetime.time(hour=hour, minute=minute)
 
-def day_of_start(start_time, end_time, now):
+def day_of_start(start_time, end_time, check_time):
     today = datetime.datetime.now().weekday()
     # today if doesn't cross midnight or no actual times given
     if (not start_time) or (not end_time) or start_time <= end_time:
         return today
     # today if we're between start and midnight
-    midnight = datetime.datetime.strptime('00:00', '%H:%M').time()
-    if is_time_between(start_time, midnight, now):
+    if start_time <= check_time:
         return today
     # Otherwise, yesterday
-    return 6 if today is 0 else today - 1    
+    return 6 if today is 0 else today - 1
 
 saved_state = hass.states.get(data.get('state_entity')).state
 climate_unit = data.get('climate_unit', 'climate.master_br')
@@ -423,7 +422,7 @@ else:
         start_day = day_of_start(time_on, time_off, now)
         day_match = True
         days = schedule.get('days')
-        if days and len(days) is 7:
+        if days and len(days) == 7:
             day_match = days[start_day] != '-' and days[start_day] != '.'
 
         in_interval = day_match and (((not time_on) or (not time_off) or
@@ -477,37 +476,37 @@ else:
                 decided = True
             break
 
-    if not matched:
-        # If no schedules matched, turn off
-        next_state = "off-None"
-        same_next_state = (next_state == saved_state)
-        if (not from_timer) or (not same_next_state):
-            turn_off = True
-            title = 'Default (Off)'
+if not matched:
+    # If no schedules matched, turn off
+    next_state = "off-None"
+    same_next_state = (next_state == saved_state)
+    if (not from_timer) or (not same_next_state):
+        turn_off = True
+        title = 'Default (Off)'
 
-    if turn_off:
-        desired_operation = 'off'
+if turn_off:
+    desired_operation = 'off'
 
-    if next_state:
-        hass.states.set(data.get('state_entity'), next_state)
+if next_state:
+    hass.states.set(data.get('state_entity'), next_state)
 
-    if desired_operation:
-        logger.info("Setting {} to mode {} target {} from schedule {}".format(
-            climate_unit, desired_operation, setpoint, title))
+if desired_operation:
+    logger.info("Setting {} to mode {} target {} from schedule {}".format(
+        climate_unit, desired_operation, setpoint, title))
+    service_data = {
+        "entity_id": climate_unit,
+        "operation_mode": desired_operation
+    }
+    hass.services.call('climate', 'set_operation_mode', service_data, False)
+
+    if setpoint:
+        if '.' in str(setpoint):
+            setpoint_num = float(setpoint)
+        else:
+            setpoint_num = int(setpoint)
         service_data = {
             "entity_id": climate_unit,
+            "temperature": setpoint_num,
             "operation_mode": desired_operation
         }
-        hass.services.call('climate', 'set_operation_mode', service_data, False)
-
-        if setpoint:
-            if '.' in str(setpoint):
-                setpoint_num = float(setpoint)
-            else:
-                setpoint_num = int(setpoint)
-            service_data = {
-                "entity_id": climate_unit,
-                "temperature": setpoint_num,
-                "operation_mode": desired_operation
-            }
-            hass.services.call('climate', 'set_temperature', service_data, False)
+        hass.services.call('climate', 'set_temperature', service_data, False)

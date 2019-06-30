@@ -23,10 +23,10 @@
 # * time_on / time_off (optional): Start and stop of this schedule, 24-hour
 #   hours:minutes. If not given, this schedule is always active (though see
 #   window and if_away/if_home below)
-# * days: (optional): String defining days of week this schedule is active.
-#   Seven characters, dash or dot if not active, any other character if active.
-#   You can use 0123456 or MTWTFSS or whatever you like. Monday is first,
-#   following Python datetime convention.
+# * days: (optional): String defining days of week this schedule is active, matched
+#   on the schedule's start time. Seven characters, dash or dot if not active, any
+#   other character if active. You can use 0123456 or MTWTFSS or whatever you like.
+#   Monday is first, following Python datetime convention.
 # * operation (required): The operating mode for this schedule, one of the modes
 #   supported by your climate entity.
 # * setpoint (optional): The desired temperature for this schedule. Some modes
@@ -51,37 +51,219 @@
 #   interval is the resolution of your scheduled changes, so make it more or
 #   less frequent as required.
 
-seasons = {
-    ('Normal Summer', 'climate.master_br'): [
+SEASONS = {
+    ('Winter', 'climate.first_floor_heat'): [
+        {
+            'title': 'Ecobee schedule',
+            'operation': 'heat'
+        }
+    ],
+    ('Winter', 'climate.second_floor'): [
+        {
+            'title': 'Ecobee schedule',
+            'operation': 'heat'
+        }
+    ],
+    ('Winter', 'climate.loft_heat'): [
+        {
+            'title': 'Ecobee schedule',
+            'operation': 'heat'
+        }
+    ],
+    ('Cold Shoulder', 'climate.first_floor_heat'): [
+        {
+            'title': 'Ecobee schedule',
+            'operation': 'heat'
+        }
+    ],
+    ('Cold Shoulder', 'climate.master_br'): [
+        {
+            'title': 'Morning (weekday)',
+            'days': 'MTWTF..',
+            'time_on': '05:45',
+            'time_off': '08:00',
+            'operation': 'heat',
+            'setpoint': 67
+        },
+        {
+            'title': 'Morning (weekend)',
+            'days': '.....SS',
+            'time_on': '07:30',
+            'time_off': '09:00',
+            'operation': 'heat',
+            'setpoint': 68
+        },
         {
             'title': 'Sleeping',
-            'time_on': '20:30',
+            'time_on': '22:00',
             'time_off': '09:00',
-            'operation': 'cool',
-            'window': 'binary_sensor.bedroom_window',
-            'setpoint': 73
+            'operation': 'heat',
+            'setpoint': 64
         },
-    ],
-    ('Normal Summer', 'climate.first_floor'): [
         {
-            'title': 'Off',
-            'operation': 'off',
+            'title': 'Day (Away)',
+            'time_on': '09:00',
+            'time_off': '16:30',
+            'if_away': True,
+            'operation': 'heat',
+            'setpoint': 62
         },
-    ],
-    ('Normal Summer', 'climate.loft'): [
         {
-            'title': 'Off',
-            'operation': 'off',
+            'title': 'Day (Home)',
+            'time_on': '09:00',
+            'time_off': '18:00',
+            'operation': 'heat',
+            'setpoint': 68
         },
+        {
+            'title': 'Evening (Away)',
+            'time_on': '18:00',
+            'time_off': '22:00',
+            'operation': 'heat',
+            'if_away': True,
+            'setpoint': 62
+        },
+        {
+            'title': 'Evening (Home)',
+            'time_on': '16:00',
+            'time_off': '22:00',
+            'operation': 'heat',
+            'setpoint': 68
+        }
     ],
-    ('Humid Summer', 'climate.master_br'): [
+    ('Cold Shoulder', 'climate.loft'): [
+        {
+            'title': 'Maintenance',
+            'operation': 'heat',
+            'window': 'binary_sensor.skylight',
+            'setpoint': 62
+        }
+    ],
+    ('Warm Shoulder', 'climate.first_floor'): [
+        {
+            'title': 'Morning (weekday)',
+            'days': 'MTWTF..',
+            'time_on': '05:45',
+            'time_off': '08:00',
+            'operation': 'heat',
+            'setpoint': 68
+        },
+        {
+            'title': 'Morning (weekend)',
+            'days': '.....SS',
+            'time_on': '07:30',
+            'time_off': '09:00',
+            'operation': 'heat',
+            'setpoint': 68
+        },
+        {
+            'title': 'Sleeping',
+            'time_on': '22:00',
+            'time_off': '09:00',
+            'operation': 'heat',
+            'setpoint': 62
+        },
+        {
+            'title': 'Day (Away)',
+            'time_on': '09:00',
+            'time_off': '16:30',
+            'if_away': True,
+            'operation': 'heat',
+            'setpoint': 62
+        },
+        {
+            'title': 'Day (Home)',
+            'time_on': '09:00',
+            'time_off': '18:00',
+            'operation': 'heat',
+            'setpoint': 68
+        },
+        {
+            'title': 'Evening (Away)',
+            'time_on': '18:00',
+            'time_off': '22:00',
+            'operation': 'heat',
+            'if_away': True,
+            'setpoint': 62
+        },
+        {
+            'title': 'Evening (Home)',
+            'time_on': '16:00',
+            'time_off': '22:00',
+            'operation': 'heat',
+            'setpoint': 69
+        }
+    ],
+    ('Warm Shoulder', 'climate.master_br'): [
+        {
+            'title': 'Morning (weekday)',
+            'days': 'MTWTF..',
+            'time_on': '05:45',
+            'time_off': '08:00',
+            'operation': 'heat',
+            'setpoint': 67
+        },
+        {
+            'title': 'Morning (weekend)',
+            'days': '.....SS',
+            'time_on': '07:30',
+            'time_off': '09:00',
+            'operation': 'heat',
+            'setpoint': 68
+        },
+        {
+            'title': 'Sleeping',
+            'time_on': '22:00',
+            'time_off': '09:00',
+            'operation': 'heat',
+            'setpoint': 64
+        },
+        {
+            'title': 'Day (Away)',
+            'time_on': '09:00',
+            'time_off': '16:30',
+            'if_away': True,
+            'operation': 'heat',
+            'setpoint': 62
+        },
+        {
+            'title': 'Day (Home)',
+            'time_on': '09:00',
+            'time_off': '18:00',
+            'operation': 'heat',
+            'setpoint': 68
+        },
+        {
+            'title': 'Evening (Away)',
+            'time_on': '18:00',
+            'time_off': '22:00',
+            'operation': 'heat',
+            'if_away': True,
+            'setpoint': 62
+        },
+        {
+            'title': 'Evening (Home)',
+            'time_on': '16:00',
+            'time_off': '22:00',
+            'operation': 'heat',
+            'setpoint': 68
+        }
+    ],
+    ('Warm Shoulder', 'climate.loft'): [
+        {
+            'title': 'Maintenance',
+            'operation': 'heat',
+            'window': 'binary_sensor.skylight',
+            'setpoint': 62
+        }
+    ],
+    ('Normal Summer', 'climate.master_br'): [
         {
             'title': 'Dehumidify',
-            'time_on': '19:30',
+            'time_on': '20:00',
             'time_off': '21:00',
             'operation': 'dry',
             'window': 'binary_sensor.bedroom_window',
-            'setpoint': 73
         },
         {
             'title': 'Sleeping',
@@ -90,18 +272,6 @@ seasons = {
             'operation': 'cool',
             'window': 'binary_sensor.bedroom_window',
             'setpoint': 73
-        },
-    ],
-    ('Humid Summer', 'climate.first_floor'): [
-        {
-            'title': 'Off',
-            'operation': 'off',
-        },
-    ],
-    ('Humid Summer', 'climate.loft'): [
-        {
-            'title': 'Off',
-            'operation': 'off',
         },
     ],
     ('Hot Summer', 'climate.master_br'): [
@@ -160,7 +330,7 @@ seasons = {
             'time_on': '06:00',
             'time_off': '16:00',
             'operation': 'cool',
-            'setpoint': 72
+            'setpoint': 73
         },
         {
             'title': 'Evening (Away)',
@@ -182,7 +352,7 @@ seasons = {
 
 def is_time_between(begin_time, end_time, check_time):
     if begin_time < end_time:
-        return check_time >= begin_time and check_time <= end_time
+        return begin_time <= check_time <= end_time
     # crosses midnight
     return check_time >= begin_time or check_time <= end_time
 
@@ -202,6 +372,18 @@ def time_offset(orig_time, offset):
         hour = hour - 24
     return datetime.time(hour=hour, minute=minute)
 
+def day_of_start(start_time, end_time, now):
+    today = datetime.datetime.now().weekday()
+    # today if doesn't cross midnight or no actual times given
+    if (not start_time) or (not end_time) or start_time <= end_time:
+        return today
+    # today if we're between start and midnight
+    midnight = datetime.datetime.strptime('00:00', '%H:%M').time()
+    if is_time_between(start_time, midnight, now):
+        return today
+    # Otherwise, yesterday
+    return 6 if today is 0 else today - 1    
+
 saved_state = hass.states.get(data.get('state_entity')).state
 climate_unit = data.get('climate_unit', 'climate.master_br')
 current_mode = hass.states.get(data.get('global_mode')).state
@@ -214,10 +396,9 @@ if at_home_sensor:
     is_away = not is_home
 
 now = datetime.datetime.now().time()
-today = datetime.datetime.now().weekday()
 
 key = (current_mode, climate_unit)
-schedules = seasons.get(key)
+schedules = SEASONS.get(key)
 
 matched = False
 setpoint = None
@@ -239,10 +420,11 @@ else:
         if time_off_str:
             time_off = datetime.datetime.strptime(time_off_str, '%H:%M').time()
 
+        start_day = day_of_start(time_on, time_off, now)
         day_match = True
         days = schedule.get('days')
         if days and len(days) is 7:
-            day_match = days[today] != '-' and days[today] != '.'
+            day_match = days[start_day] != '-' and days[start_day] != '.'
 
         in_interval = day_match and (((not time_on) or (not time_off) or
                                       is_time_between(time_on, time_off, now)))
@@ -314,7 +496,8 @@ else:
             climate_unit, desired_operation, setpoint, title))
         service_data = {
             "entity_id": climate_unit,
-            "operation_mode": desired_operation}
+            "operation_mode": desired_operation
+        }
         hass.services.call('climate', 'set_operation_mode', service_data, False)
 
         if setpoint:
@@ -325,5 +508,6 @@ else:
             service_data = {
                 "entity_id": climate_unit,
                 "temperature": setpoint_num,
-                "operation_mode": desired_operation}
+                "operation_mode": desired_operation
+            }
             hass.services.call('climate', 'set_temperature', service_data, False)

@@ -314,6 +314,7 @@ SEASONS = {
             'title': 'Sleeping',
             'time_on': '22:00',
             'time_off': '06:00',
+            'window': 'binary_sensor.first_floor_windows',
             'operation': 'cool',
             'setpoint': 78
         },

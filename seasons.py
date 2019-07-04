@@ -323,6 +323,7 @@ SEASONS = {
             'time_on': '08:00',
             'time_off': '16:00',
             'operation': 'cool',
+            'window': 'binary_sensor.first_floor_windows',
             'if_away': True,
             'setpoint': 78
         },
@@ -330,6 +331,7 @@ SEASONS = {
             'title': 'Day (Home)',
             'time_on': '06:00',
             'time_off': '16:00',
+            'window': 'binary_sensor.first_floor_windows',
             'operation': 'cool',
             'setpoint': 73
         },
@@ -338,6 +340,7 @@ SEASONS = {
             'time_on': '18:00',
             'time_off': '22:00',
             'operation': 'cool',
+            'window': 'binary_sensor.first_floor_windows',
             'if_away': True,
             'setpoint': 78
         },
@@ -345,6 +348,7 @@ SEASONS = {
             'title': 'Evening (Home)',
             'time_on': '16:00',
             'time_off': '22:00',
+            'window': 'binary_sensor.first_floor_windows',
             'operation': 'cool',
             'setpoint': 72
         }

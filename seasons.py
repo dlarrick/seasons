@@ -133,11 +133,29 @@ SEASONS = {
     ],
     ('Cold Shoulder', 'climate.loft'): [
         {
-            'title': 'Maintenance',
+            'title': 'Night',
             'operation': 'heat',
+            'time_on': '00:00',
+            'time_off': '09:00',
+            'window': 'binary_sensor.skylight',
+            'setpoint': 61
+        },
+        {
+            'title': 'Day',
+            'operation': 'heat',
+            'time_on': '09:00',
+            'time_off': '18:00',
             'window': 'binary_sensor.skylight',
             'setpoint': 62
-        }
+        },
+        {
+            'title': 'Evening',
+            'operation': 'heat',
+            'time_on': '18:00',
+            'time_off': '00:00',
+            'window': 'binary_sensor.skylight',
+            'setpoint': 63
+        }        
     ],
     ('Warm Shoulder', 'climate.first_floor'): [
         {
@@ -251,10 +269,28 @@ SEASONS = {
     ],
     ('Warm Shoulder', 'climate.loft'): [
         {
-            'title': 'Maintenance',
+            'title': 'Night',
             'operation': 'heat',
+            'time_on': '00:00',
+            'time_off': '09:00',
+            'window': 'binary_sensor.skylight',
+            'setpoint': 61
+        },
+        {
+            'title': 'Day',
+            'operation': 'heat',
+            'time_on': '09:00',
+            'time_off': '18:00',
             'window': 'binary_sensor.skylight',
             'setpoint': 62
+        },
+        {
+            'title': 'Evening',
+            'operation': 'heat',
+            'time_on': '18:00',
+            'time_off': '00:00',
+            'window': 'binary_sensor.skylight',
+            'setpoint': 63
         }
     ],
     ('Normal Summer', 'climate.master_br'): [
@@ -276,8 +312,15 @@ SEASONS = {
     ],
     ('Hot Summer', 'climate.master_br'): [
         {
-            'title': 'Sleeping',
+            'title': 'Dehumidify',
             'time_on': '20:00',
+            'time_off': '21:00',
+            'operation': 'dry',
+            'window': 'binary_sensor.bedroom_window',
+        },
+        {
+            'title': 'Sleeping',
+            'time_on': '21:00',
             'time_off': '09:00',
             'operation': 'cool',
             'window': 'binary_sensor.bedroom_window',
@@ -303,10 +346,28 @@ SEASONS = {
     ],
     ('Hot Summer', 'climate.loft'): [
         {
-            'title': 'Maintenance',
+            'title': 'Night',
             'operation': 'cool',
+            'time_on': '00:00',
+            'time_off': '09:00',
+            'window': 'binary_sensor.skylight',
+            'setpoint': 82
+        },
+        {
+            'title': 'Day',
+            'operation': 'cool',
+            'time_on': '09:00',
+            'time_off': '18:00',
             'window': 'binary_sensor.skylight',
             'setpoint': 80
+        },
+        {
+            'title': 'Evening',
+            'operation': 'cool',
+            'time_on': '18:00',
+            'time_off': '00:00',
+            'window': 'binary_sensor.skylight',
+            'setpoint': 81
         }
     ],
     ('Hot Summer', 'climate.first_floor'): [
@@ -350,7 +411,7 @@ SEASONS = {
             'time_off': '22:00',
             'window': 'binary_sensor.first_floor_windows',
             'operation': 'cool',
-            'setpoint': 72
+            'setpoint': 73
         }
     ]
 }

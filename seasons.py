@@ -560,7 +560,7 @@ if desired_operation:
         climate_unit, desired_operation, setpoint, title))
     service_data = {
         "entity_id": climate_unit,
-        "operation_mode": desired_operation
+        "hvac_mode": desired_operation
     }
     hass.services.call('climate', 'set_hvac_mode', service_data, False)
 
@@ -572,6 +572,6 @@ if desired_operation:
         service_data = {
             "entity_id": climate_unit,
             "temperature": setpoint_num,
-            "operation_mode": desired_operation
+            "hvac_mode": desired_operation
         }
         hass.services.call('climate', 'set_temperature', service_data, False)

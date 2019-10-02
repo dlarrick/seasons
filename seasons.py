@@ -38,6 +38,11 @@
 # * if_away / if_home (optional): If present, this schedule will only apply if
 #   the at_home_sensor state matches (true meaning someone is home). If no
 #   at_home_sensor is given, these are both always false.
+# * humidity_sensor (optional): See if_humid. Note: could also be some other
+#   type of sensor, like dewpoint.
+# * if_humid (optional): Percentage. If present, this schedule will only apply
+#   if the humidity reported by the humidity_sensor is above this value at the
+#   beginning of the period.
 #
 # Put this script in <config>/python_scripts (create the directory if needed)
 # and activate it as described at
@@ -155,7 +160,7 @@ SEASONS = {
             'time_off': '00:00',
             'window': 'binary_sensor.skylight',
             'setpoint': 63
-        }        
+        }
     ],
     ('Warm Shoulder', 'climate.first_floor'): [
         {
@@ -299,6 +304,8 @@ SEASONS = {
             'time_on': '20:00',
             'time_off': '21:00',
             'operation': 'dry',
+            'humidity_sensor': 'sensor.dewpoint_mbr',
+            'if_humid': 63,
             'window': 'binary_sensor.bedroom_window',
         },
         {
@@ -316,6 +323,8 @@ SEASONS = {
             'time_on': '20:00',
             'time_off': '21:00',
             'operation': 'dry',
+            'humidity_sensor': 'sensor.dewpoint_mbr',
+            'if_humid': 63,
             'window': 'binary_sensor.bedroom_window',
         },
         {
@@ -447,7 +456,7 @@ def day_of_start(start_time, end_time, check_time):
     if start_time <= check_time:
         return today
     # Otherwise, yesterday
-    return 6 if today is 0 else today - 1
+    return 6 if today == 0 else today - 1
 
 saved_state = hass.states.get(data.get('state_entity')).state
 climate_unit = data.get('climate_unit', 'climate.master_br')
@@ -499,7 +508,12 @@ else:
         if schedule.get('if_away'):
             home_away_match = not is_home
 
-        if in_interval and home_away_match:
+        dry_exclude = False
+        hs = schedule.get('humidity_sensor')
+        if hs and schedule.get('if_humid'):
+            dry_exclude = float(hass.states.get(hs).state) < float(schedule['if_humid'])
+
+        if in_interval and home_away_match and not dry_exclude:
             # When we get here, we have schedules for this unit and
             # global mode and we're in this schedule's interval.
             # We will obey this schedule and ignore subsequent matches

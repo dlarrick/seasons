@@ -57,6 +57,24 @@
 #   less frequent as required.
 
 SEASONS = {
+    ('Cold Winter', 'climate.first_floor_heat'): [
+        {
+            'title': 'Ecobee schedule',
+            'operation': 'heat'
+        }
+    ],
+    ('Cold Winter', 'climate.second_floor'): [
+        {
+            'title': 'Ecobee schedule',
+            'operation': 'heat'
+        }
+    ],
+    ('Cold Winter', 'climate.loft_heat'): [
+        {
+            'title': 'Ecobee schedule',
+            'operation': 'heat'
+        }
+    ],
     ('Winter', 'climate.first_floor_heat'): [
         {
             'title': 'Ecobee schedule',

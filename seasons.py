@@ -69,6 +69,15 @@ SEASONS = {
             'operation': 'heat'
         }
     ],
+    ('Winter', 'climate.master_br'): [
+        {
+            'title': 'Winter Sleeping',
+            'time_on': '21:30',
+            'time_off': '08:00',
+            'operation': 'heat',
+            'setpoint': 64
+        }
+    ],
     ('Winter', 'climate.loft_heat'): [
         {
             'title': 'Ecobee schedule',
@@ -107,7 +116,7 @@ SEASONS = {
         },
         {
             'title': 'Day (Away)',
-            'time_on': '09:00',
+            'time_on': '08:00',
             'time_off': '16:30',
             'if_away': True,
             'operation': 'heat',
@@ -115,7 +124,7 @@ SEASONS = {
         },
         {
             'title': 'Day (Home)',
-            'time_on': '09:00',
+            'time_on': '08:00',
             'time_off': '18:00',
             'operation': 'heat',
             'setpoint': 68
@@ -123,7 +132,7 @@ SEASONS = {
         {
             'title': 'Evening (Away)',
             'time_on': '18:00',
-            'time_off': '22:00',
+            'time_off': '21:45',
             'operation': 'heat',
             'if_away': True,
             'setpoint': 62
@@ -131,7 +140,7 @@ SEASONS = {
         {
             'title': 'Evening (Home)',
             'time_on': '16:00',
-            'time_off': '22:00',
+            'time_off': '21:45',
             'operation': 'heat',
             'setpoint': 68
         }
@@ -204,7 +213,7 @@ SEASONS = {
         {
             'title': 'Evening (Away)',
             'time_on': '18:00',
-            'time_off': '22:00',
+            'time_off': '21:45',
             'operation': 'heat',
             'if_away': True,
             'setpoint': 62
@@ -212,7 +221,7 @@ SEASONS = {
         {
             'title': 'Evening (Home)',
             'time_on': '16:00',
-            'time_off': '22:00',
+            'time_off': '21:45',
             'operation': 'heat',
             'setpoint': 69
         }
@@ -259,7 +268,7 @@ SEASONS = {
         {
             'title': 'Evening (Away)',
             'time_on': '18:00',
-            'time_off': '22:00',
+            'time_off': '21:45',
             'operation': 'heat',
             'if_away': True,
             'setpoint': 62
@@ -267,7 +276,7 @@ SEASONS = {
         {
             'title': 'Evening (Home)',
             'time_on': '16:00',
-            'time_off': '22:00',
+            'time_off': '21:45',
             'operation': 'heat',
             'setpoint': 68
         }
@@ -408,7 +417,7 @@ SEASONS = {
         {
             'title': 'Evening (Away)',
             'time_on': '18:00',
-            'time_off': '22:00',
+            'time_off': '21:45',
             'operation': 'cool',
             'window': 'binary_sensor.first_floor_windows',
             'if_away': True,
@@ -417,7 +426,7 @@ SEASONS = {
         {
             'title': 'Evening (Home)',
             'time_on': '16:00',
-            'time_off': '22:00',
+            'time_off': '21:45',
             'window': 'binary_sensor.first_floor_windows',
             'operation': 'cool',
             'setpoint': 73

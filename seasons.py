@@ -90,8 +90,8 @@ SEASONS = {
     ('Winter', 'climate.master_br'): [
         {
             'title': 'Winter Sleeping',
-            'time_on': '21:30',
-            'time_off': '08:00',
+            'time_on': '21:29',
+            'time_off': '07:59',
             'operation': 'heat',
             'setpoint': 64
         }
@@ -112,54 +112,71 @@ SEASONS = {
         {
             'title': 'Morning (weekday)',
             'days': 'MTWTF..',
-            'time_on': '05:45',
-            'time_off': '08:00',
+            'time_on': '05:44',
+            'time_off': '07:59',
             'operation': 'heat',
+            'window': 'binary_sensor.bedroom_window',
             'setpoint': 67
         },
         {
             'title': 'Morning (weekend)',
             'days': '.....SS',
-            'time_on': '07:30',
-            'time_off': '09:00',
+            'time_on': '07:29',
+            'time_off': '08:59',
             'operation': 'heat',
+            'window': 'binary_sensor.bedroom_window',
             'setpoint': 68
         },
         {
             'title': 'Sleeping',
-            'time_on': '22:00',
-            'time_off': '09:00',
+            'time_on': '21:59',
+            'time_off': '08:59',
             'operation': 'heat',
+            'window': 'binary_sensor.bedroom_window',
             'setpoint': 64
         },
         {
             'title': 'Day (Away)',
-            'time_on': '08:00',
-            'time_off': '16:30',
+            'time_on': '07:59',
+            'time_off': '16:29',
             'if_away': True,
             'operation': 'heat',
+            'window': 'binary_sensor.bedroom_window',
             'setpoint': 62
         },
         {
             'title': 'Day (Home)',
-            'time_on': '08:00',
-            'time_off': '18:00',
+            'time_on': '07:59',
+            'time_off': '17:59',
             'operation': 'heat',
+            'window': 'binary_sensor.bedroom_window',
             'setpoint': 68
         },
         {
             'title': 'Evening (Away)',
-            'time_on': '18:00',
-            'time_off': '21:45',
+            'time_on': '17:59',
+            'time_off': '21:44',
             'operation': 'heat',
+            'window': 'binary_sensor.bedroom_window',
             'if_away': True,
             'setpoint': 62
         },
         {
             'title': 'Evening (Home)',
-            'time_on': '16:00',
-            'time_off': '21:45',
+            'time_on': '15:59',
+            'time_off': '21:44',
             'operation': 'heat',
+            'window': 'binary_sensor.bedroom_window',
+            'setpoint': 68
+        }
+    ],
+    ('Cold Shoulder', 'climate.loft_heat'): [
+        {
+            'title': 'Morning Boost',
+            'operation': 'heat',
+            'time_on': '06:59',
+            'time_off': '07:44',
+            'window': 'binary_sensor.skylight',
             'setpoint': 68
         }
     ],
@@ -167,24 +184,34 @@ SEASONS = {
         {
             'title': 'Night',
             'operation': 'heat',
-            'time_on': '00:00',
-            'time_off': '09:00',
+            'time_on': '00:04',
+            'time_off': '07:14',
             'window': 'binary_sensor.skylight',
             'setpoint': 61
         },
         {
-            'title': 'Day',
+            'title': 'Day (Weekday)',
+            'days': 'MTWTF..',
             'operation': 'heat',
-            'time_on': '09:00',
-            'time_off': '18:00',
+            'time_on': '07:14',
+            'time_off': '16:59',
+            'window': 'binary_sensor.skylight',
+            'setpoint': 68
+        },
+        {
+            'title': 'Day (Weekend)',
+            'days': '.....SS',
+            'operation': 'heat',
+            'time_on': '08:59',
+            'time_off': '16:59',
             'window': 'binary_sensor.skylight',
             'setpoint': 62
         },
         {
             'title': 'Evening',
             'operation': 'heat',
-            'time_on': '18:00',
-            'time_off': '00:00',
+            'time_on': '16:59',
+            'time_off': '00:04',
             'window': 'binary_sensor.skylight',
             'setpoint': 63
         }
@@ -193,53 +220,60 @@ SEASONS = {
         {
             'title': 'Morning (weekday)',
             'days': 'MTWTF..',
-            'time_on': '05:45',
-            'time_off': '08:00',
+            'time_on': '05:44',
+            'time_off': '07:59',
             'operation': 'heat',
             'setpoint': 68
         },
         {
             'title': 'Morning (weekend)',
             'days': '.....SS',
-            'time_on': '07:30',
-            'time_off': '09:00',
+            'time_on': '07:29',
+            'time_off': '08:59',
             'operation': 'heat',
             'setpoint': 68
         },
         {
+            'title': 'Pre-Sleeping',
+            'time_on': '21:44',
+            'time_off': '21:59',
+            'operation': 'heat',
+            'setpoint': 62
+        },
+        {
             'title': 'Sleeping',
-            'time_on': '22:00',
-            'time_off': '09:00',
+            'time_on': '21:59',
+            'time_off': '08:59',
             'operation': 'heat',
             'setpoint': 62
         },
         {
             'title': 'Day (Away)',
-            'time_on': '09:00',
-            'time_off': '16:30',
+            'time_on': '08:59',
+            'time_off': '16:29',
             'if_away': True,
             'operation': 'heat',
             'setpoint': 62
         },
         {
             'title': 'Day (Home)',
-            'time_on': '09:00',
-            'time_off': '18:00',
+            'time_on': '08:59',
+            'time_off': '17:59',
             'operation': 'heat',
             'setpoint': 68
         },
         {
             'title': 'Evening (Away)',
-            'time_on': '18:00',
-            'time_off': '21:45',
+            'time_on': '17:59',
+            'time_off': '21:44',
             'operation': 'heat',
             'if_away': True,
             'setpoint': 62
         },
         {
             'title': 'Evening (Home)',
-            'time_on': '16:00',
-            'time_off': '21:45',
+            'time_on': '15:59',
+            'time_off': '21:44',
             'operation': 'heat',
             'setpoint': 69
         }
@@ -248,53 +282,60 @@ SEASONS = {
         {
             'title': 'Morning (weekday)',
             'days': 'MTWTF..',
-            'time_on': '05:45',
-            'time_off': '08:00',
+            'time_on': '05:44',
+            'time_off': '07:59',
             'operation': 'heat',
             'setpoint': 67
         },
         {
             'title': 'Morning (weekend)',
             'days': '.....SS',
-            'time_on': '07:30',
-            'time_off': '09:00',
+            'time_on': '07:29',
+            'time_off': '08:59',
             'operation': 'heat',
             'setpoint': 68
         },
         {
+            'title': 'Pre-Sleeping',
+            'time_on': '21:44',
+            'time_off': '21:59',
+            'operation': 'heat',
+            'setpoint': 64
+        },
+        {
             'title': 'Sleeping',
-            'time_on': '22:00',
-            'time_off': '09:00',
+            'time_on': '21:59',
+            'time_off': '08:59',
             'operation': 'heat',
             'setpoint': 64
         },
         {
             'title': 'Day (Away)',
-            'time_on': '09:00',
-            'time_off': '16:30',
+            'time_on': '08:59',
+            'time_off': '16:29',
             'if_away': True,
             'operation': 'heat',
             'setpoint': 62
         },
         {
             'title': 'Day (Home)',
-            'time_on': '09:00',
-            'time_off': '18:00',
+            'time_on': '08:59',
+            'time_off': '17:59',
             'operation': 'heat',
             'setpoint': 68
         },
         {
             'title': 'Evening (Away)',
-            'time_on': '18:00',
-            'time_off': '21:45',
+            'time_on': '17:59',
+            'time_off': '21:44',
             'operation': 'heat',
             'if_away': True,
             'setpoint': 62
         },
         {
             'title': 'Evening (Home)',
-            'time_on': '16:00',
-            'time_off': '21:45',
+            'time_on': '15:59',
+            'time_off': '21:44',
             'operation': 'heat',
             'setpoint': 68
         }
@@ -303,24 +344,34 @@ SEASONS = {
         {
             'title': 'Night',
             'operation': 'heat',
-            'time_on': '00:00',
-            'time_off': '09:00',
+            'time_on': '00:04',
+            'time_off': '07:29',
             'window': 'binary_sensor.skylight',
             'setpoint': 61
         },
         {
-            'title': 'Day',
+            'title': 'Day (Weekday)',
+            'days': 'MTWTF..',
             'operation': 'heat',
-            'time_on': '09:00',
-            'time_off': '18:00',
+            'time_on': '07:29',
+            'time_off': '17:59',
+            'window': 'binary_sensor.skylight',
+            'setpoint': 68
+        },
+        {
+            'title': 'Day (Weekend)',
+            'days': '.....SS',
+            'operation': 'heat',
+            'time_on': '08:59',
+            'time_off': '17:59',
             'window': 'binary_sensor.skylight',
             'setpoint': 62
         },
         {
             'title': 'Evening',
             'operation': 'heat',
-            'time_on': '18:00',
-            'time_off': '00:00',
+            'time_on': '17:59',
+            'time_off': '00:04',
             'window': 'binary_sensor.skylight',
             'setpoint': 63
         }
@@ -328,44 +379,60 @@ SEASONS = {
     ('Normal Summer', 'climate.master_br'): [
         {
             'title': 'Dehumidify',
-            'time_on': '20:00',
-            'time_off': '21:00',
+            'time_on': '19:59',
+            'time_off': '20:59',
             'operation': 'dry',
             'humidity_sensor': 'sensor.dewpoint_mbr',
             'if_humid': 63,
             'window': 'binary_sensor.bedroom_window',
         },
         {
-            'title': 'Sleeping',
-            'time_on': '21:00',
-            'time_off': '09:00',
+            'title': 'Sleeping-early',
+            'time_on': '20:59',
+            'time_off': '02:59',
             'operation': 'cool',
             'window': 'binary_sensor.bedroom_window',
             'setpoint': 73
+        },
+        {
+            'title': 'Sleeping-late',
+            'time_on': '02:59',
+            'time_off': '07:59',
+            'operation': 'cool',
+            'window': 'binary_sensor.bedroom_window',
+            'setpoint': 74
         },
     ],
     ('Hot Summer', 'climate.master_br'): [
         {
             'title': 'Dehumidify',
-            'time_on': '20:00',
-            'time_off': '21:00',
+            'time_on': '19:59',
+            'time_off': '20:59',
             'operation': 'dry',
             'humidity_sensor': 'sensor.dewpoint_mbr',
             'if_humid': 63,
             'window': 'binary_sensor.bedroom_window',
         },
         {
-            'title': 'Sleeping',
-            'time_on': '21:00',
-            'time_off': '09:00',
+            'title': 'Sleeping-early',
+            'time_on': '20:59',
+            'time_off': '02:59',
             'operation': 'cool',
             'window': 'binary_sensor.bedroom_window',
             'setpoint': 73
         },
         {
+            'title': 'Sleeping-late',
+            'time_on': '02:59',
+            'time_off': '07:59',
+            'operation': 'cool',
+            'window': 'binary_sensor.bedroom_window',
+            'setpoint': 74
+        },
+        {
             'title': 'Day (Away)',
-            'time_on': '09:30',
-            'time_off': '19:45',
+            'time_on': '08:29',
+            'time_off': '19:44',
             'operation': 'cool',
             'window': 'binary_sensor.bedroom_window',
             'if_away': True,
@@ -373,35 +440,44 @@ SEASONS = {
         },
         {
             'title': 'Day (Home)',
-            'time_on': '09:00',
-            'time_off': '19:45',
+            'time_on': '08:29',
+            'time_off': '19:44',
             'operation': 'cool',
             'window': 'binary_sensor.bedroom_window',
-            'setpoint': 75
+            'setpoint': 76
         },
     ],
     ('Hot Summer', 'climate.loft'): [
         {
             'title': 'Night',
             'operation': 'cool',
-            'time_on': '00:00',
-            'time_off': '09:00',
+            'time_on': '00:04',
+            'time_off': '08:59',
             'window': 'binary_sensor.skylight',
-            'setpoint': 82
+            'setpoint': 83
+        },
+        {
+            'title': 'Day (away)',
+            'operation': 'cool',
+            'time_on': '08:59',
+            'time_off': '17:59',
+            'if_away': True,
+            'window': 'binary_sensor.skylight',
+            'setpoint': 85
         },
         {
             'title': 'Day',
             'operation': 'cool',
-            'time_on': '09:00',
-            'time_off': '18:00',
+            'time_on': '08:59',
+            'time_off': '17:59',
             'window': 'binary_sensor.skylight',
             'setpoint': 80
         },
         {
             'title': 'Evening',
             'operation': 'cool',
-            'time_on': '18:00',
-            'time_off': '00:00',
+            'time_on': '17:59',
+            'time_off': '00:04',
             'window': 'binary_sensor.skylight',
             'setpoint': 81
         }
@@ -409,16 +485,16 @@ SEASONS = {
     ('Hot Summer', 'climate.first_floor'): [
         {
             'title': 'Sleeping',
-            'time_on': '22:00',
-            'time_off': '06:00',
+            'time_on': '21:59',
+            'time_off': '05:59',
             'window': 'binary_sensor.first_floor_windows',
             'operation': 'cool',
             'setpoint': 78
         },
         {
             'title': 'Day (Away)',
-            'time_on': '08:00',
-            'time_off': '16:00',
+            'time_on': '07:59',
+            'time_off': '15:59',
             'operation': 'cool',
             'window': 'binary_sensor.first_floor_windows',
             'if_away': True,
@@ -426,16 +502,16 @@ SEASONS = {
         },
         {
             'title': 'Day (Home)',
-            'time_on': '06:00',
-            'time_off': '16:00',
+            'time_on': '05:59',
+            'time_off': '15:59',
             'window': 'binary_sensor.first_floor_windows',
             'operation': 'cool',
-            'setpoint': 73
+            'setpoint': 75
         },
         {
             'title': 'Evening (Away)',
-            'time_on': '18:00',
-            'time_off': '21:45',
+            'time_on': '17:59',
+            'time_off': '21:44',
             'operation': 'cool',
             'window': 'binary_sensor.first_floor_windows',
             'if_away': True,
@@ -443,11 +519,11 @@ SEASONS = {
         },
         {
             'title': 'Evening (Home)',
-            'time_on': '16:00',
-            'time_off': '21:45',
+            'time_on': '15:59',
+            'time_off': '21:44',
             'window': 'binary_sensor.first_floor_windows',
             'operation': 'cool',
-            'setpoint': 73
+            'setpoint': 75
         }
     ]
 }
@@ -507,6 +583,7 @@ turn_on = False
 turn_off = False
 desired_operation = None
 title = None
+next_state = None
 if not schedules:
     logger.info("No schedules for {}".format(key))
 else:
@@ -582,8 +659,8 @@ else:
                 decided = True
             break
 
-if not matched:
-    # If no schedules matched, turn off
+if not matched and current_mode != "Manual":
+    # If no schedules matched, turn off except in Manual
     next_state = "off-None"
     same_next_state = (next_state == saved_state)
     if (not from_timer) or (not same_next_state):
@@ -592,9 +669,6 @@ if not matched:
 
 if turn_off:
     desired_operation = 'off'
-
-if next_state:
-    hass.states.set(data.get('state_entity'), next_state)
 
 if desired_operation:
     logger.info("Setting {} to mode {} target {} from schedule {}".format(
@@ -606,6 +680,7 @@ if desired_operation:
     hass.services.call('climate', 'set_hvac_mode', service_data, False)
 
     if setpoint:
+        time.sleep(2.0)
         if '.' in str(setpoint):
             setpoint_num = float(setpoint)
         else:
@@ -616,3 +691,7 @@ if desired_operation:
             "hvac_mode": desired_operation
         }
         hass.services.call('climate', 'set_temperature', service_data, False)
+
+if next_state:
+    hass.states.set(data.get('state_entity'), next_state)
+
